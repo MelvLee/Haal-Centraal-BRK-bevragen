@@ -1,37 +1,136 @@
 #language: nl
 Functionaliteit: BRK Update API
     Als leverancier
-    Wil ik wijzigingen aan Kadastraal Onroerende Zaken en nieuwe Kadastraal Onroerende Zaken
+    Wil ik wijzigingen aan Kadastraal Onroerende Zaken en nieuwe Kadastraal Onroerende Zaken kunnen ophalen
     Zodat ik deze wijzigingen kan doorvoeren in mijn eigen systeem
 
 Achtergrond:
     Gegeven de base url van de update API is 'https://www.haal-centraal.nl/kadastraal-onroerende-zaak-update/api'
-    En kadastraal onroerende zaak met identificatie 12345678 in gemeente '0344' is gewijzigd op 02-01-2020
-    En een zakelijk gerechtigde van kadastraal onroerende zaak met identificatie 23456789 in gemeente '0344' is gewijzigd op 03-01-2020
-    En een nieuw kadastraal onroerende zaak met identificatie 34567890 is toegevoegd aan gemeente '0344' op 04-01-2020
+    En kadastraal onroerende zaak met identificatie 12345678 in gemeente '0344' is gewijzigd op de volgende tijdstippen
+    | tijdstip          |
+    | 2019-12-30T09:00Z |
+    | 2020-01-02T10:05Z |
+    | 2020-01-02T13:30Z |
+    En een zakelijk gerechtigde van kadastraal onroerende zaak met identificatie 23456789 in gemeente '0363' is gewijzigd op de volgende tijdstippen
+    | tijdstip          |
+    | 2019-12-30T10:00Z |
+    | 2020-01-03T12:25Z |
+    En een nieuw kadastraal onroerende zaak met identificatie 34567890 is toegevoegd aan gemeente '0518' op tijdstip 2020-01-04T10:15Z
 
-Scenario: Gewijzigde en nieuwe Kadastraal Onroerende Zaken op een datum opvragen
-    Als de consumer een request 'GET /kadastraalonroerendezaken?gemuteerdop=2020-01-02' stuurt naar de update API
-    Dan bevat de response de volgende kadastraal onroerende zaken
-    | identificatie |
-    | 12345678      |
+Scenario: Wijzigingen in een periode opvragen
+    Als de consumer de request 'GET /wijzigingen?van=2020-01-02&tot-2020-01-03' stuurt naar de update API
+    Dan is de response
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-01-02&tot-2020-01-03" },
+            "kadastraalonroerendezaak": {
+                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?mutatietijdstip={tijdstip}",
+                 "templated": true
+            }
+        },
+        "_embedded": {
+            "wijzigingen": [
+                {
+                    "kadastraalobjectidentificatie": "12345678",
+                    "type": "kadastraalonroerendezaak",
+                    "wasTijdstip": "2019-12-30T09:00:00Z",
+                    "wordtTijdstip": "2020-01-02T10:05:00Z"
+                },
+                {
+                    "kadastraalobjectidentificatie": "12345678",
+                    "type": "kadastraalonroerendezaak",
+                    "wasTijdstip": "2020-01-02T10:05:00Z",
+                    "wordtTijdstip": "2020-01-02T13:30:00Z"
+                }
+            ]
+        }
+    }
 
-Scenario: Gewijzigde en nieuwe Kadastraal Onroerende Zaken vanaf een datum opvragen
-    Als de consumer een request 'GET /kadastraalonroerendezaken?gemuteerdvanaf=2020-01-03' stuurt naar de update API
-    Dan bevat de response de volgende kadastraal onroerende zaken
-    | identificatie |
-    | 23456789      |
-    | 34567890      |
+Scenario: Wijzigingen vanaf een datum opvragen
+    Als de consumer de request 'GET /wijzigingen?van=2020-01-03' stuurt naar de update API
+    Dan is de response
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-01-03" },
+            "kadastraalonroerendezaak": {
+                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?mutatietijdstip={tijdstip}",
+                 "templated": true
+            },
+            "zakelijkgerechtigde": {
+                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden?mutatietijdstip={tijdstip}",
+                 "templated": true
+            }
+        },
+        "_embedded": {
+            "wijzigingen": [
+                {
+                    "kadastraalobjectidentificatie": "23456789",
+                    "type": "zakelijkgerechtigde",
+                    "wasTijdstip": "2019-12-30T10:00Z",
+                    "wordtTijdstip": "2020-01-03T12:25Z"
+                },
+                {
+                    "kadastraalobjectidentificatie": "34567890",
+                    "type": "kadastraalonroerendezaak",
+                    "wordtTijdstip": "2020-01-04T10:15Z"
+                }
+            ]
+        }
+    }
 
-Scenario: Gewijzigde en nieuwe Kadastraal Onroerende Zaken tot een datum opvragen
-    Als de consumer een request 'GET /kadastraalonroerendezaken?gemuteerdtot=2020-01-04' stuurt naar de update API
-    Dan bevat de response de volgende kadastraal onroerende zaken
-    | identificatie |
-    | 12345678      |
-    | 23456789      |
+Scenario: Wijzigingen tot een datum opvragen
+    Als de consumer de request 'GET /wijzigingen?tot=2020-01-04' stuurt naar de update API
+    Dan is de response
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?tot=2020-01-04" },
+            "kadastraalonroerendezaak": {
+                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?mutatietijdstip={tijdstip}",
+                 "templated": true
+            }
+        },
+        "_embedded": {
+            "wijzigingen": [
+                {
+                    "kadastraalobjectidentificatie": "12345678",
+                    "type": "kadastraalonroerendezaak",
+                    "wasTijdstip": "2019-12-30T09:00:00Z",
+                    "wordtTijdstip": "2020-01-02T10:05:00Z"
+                },
+                {
+                    "kadastraalobjectidentificatie": "12345678",
+                    "type": "kadastraalonroerendezaak",
+                    "wasTijdstip": "2020-01-02T10:05:00Z",
+                    "wordtTijdstip": "2020-01-02T13:30:00Z"
+                },
+                {
+                    "kadastraalobjectidentificatie": "23456789",
+                    "type": "kadastraalonroerendezaak",
+                    "wasTijdstip": "2019-12-30T10:00Z",
+                    "wordtTijdstip": "2020-01-03T12:25Z"
+                }
+            ]
+        }
+    }
 
-Scenario: Gewijzigde en nieuwe Kadastraal Onroerende Zaken in een periode opvragen
-    Als de consumer een request 'GET /kadastraalonroerendezaken?gemuteerdvanaf=2020-01-03&gemuteerdtot=2020-01-04' stuurt naar de update API
-    Dan bevat de response de volgende kadastraal onroerende zaken
-    | identificatie |
-    | 23456789      |
+Scenario: Wijzigingen voor een gemeente opvragen
+    Als de consumer de request 'GET /wijzigingen?van=2020-01-03&gemeentecode=0518' stuurt naar de update API
+    Dan is de response
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-01-01gemeentecode=0518" },
+            "kadastraalonroerendezaak": {
+                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?mutatietijdstip={tijdstip}",
+                 "templated": true
+            }
+        },
+        "_embedded": {
+            "wijzigingen": [
+                {
+                    "kadastraalobjectidentificatie": "34567890",
+                    "type": "kadastraalonroerendezaak",
+                    "wordtTijdstip": "2020-01-04T10:15Z"
+                }
+            ]
+        }
+    }
