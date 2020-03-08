@@ -14,7 +14,7 @@ Achtergrond:
     | tijdstip          |
     | 2019-12-30T10:00Z |
     | 2020-01-03T12:25Z |
-    En een nieuw kadastraal onroerende zaak met identificatie 34567890 is toegevoegd aan gemeente '0518' op tijdstip 2020-01-04T10:15Z
+    En een nieuw kadastraal onroerende zaak met identificatie 34567890 is toegevoegd aan gemeente '0518' op tijdstip '2020-01-04T10:15Z'
     En een kadaster natuurlijk persoon met identificatie 45678901 in gemeente '0518' is gewijzigd op de volgende tijdstippen
     | tijdstip          |
     | 2020-01-02T14:00Z |
@@ -23,6 +23,7 @@ Achtergrond:
 Scenario: Wijzigingen in een periode opvragen
     Als de consumer de request 'GET /wijzigingen?van=2020-01-02&tot-2020-01-03' stuurt naar de update API
     Dan is de response
+    """
     {
         "_links": {
             "self": { "href": "/wijzigingen?van=2020-01-02&tot-2020-01-03" },
@@ -57,10 +58,12 @@ Scenario: Wijzigingen in een periode opvragen
             ]
         }
     }
+    """
 
 Scenario: Wijzigingen vanaf een datum opvragen
     Als de consumer de request 'GET /wijzigingen?van=2020-01-03' stuurt naar de update API
     Dan is de response
+    """
     {
         "_links": {
             "self": { "href": "/wijzigingen?van=2020-01-03" },
@@ -99,10 +102,12 @@ Scenario: Wijzigingen vanaf een datum opvragen
             ]
         }
     }
+    """
 
 Scenario: Wijzigingen tot een datum opvragen
     Als de consumer de request 'GET /wijzigingen?tot=2020-01-04' stuurt naar de update API
     Dan is de response
+    """
     {
         "_links": {
             "self": { "href": "/wijzigingen?tot=2020-01-04" },
@@ -143,10 +148,12 @@ Scenario: Wijzigingen tot een datum opvragen
             ]
         }
     }
+    """
 
 Scenario: Wijzigingen voor een gemeente opvragen
     Als de consumer de request 'GET /wijzigingen?van=2020-01-03&gemeentecode=0518' stuurt naar de update API
     Dan is de response
+    """
     {
         "_links": {
             "self": { "href": "/wijzigingen?van=2020-01-01gemeentecode=0518" },
@@ -175,3 +182,4 @@ Scenario: Wijzigingen voor een gemeente opvragen
             ]
         }
     }
+    """
