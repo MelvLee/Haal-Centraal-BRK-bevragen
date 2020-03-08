@@ -1,0 +1,251 @@
+openapi: 3.0.0
+info:
+  title: "BRK Wijzigingen API"
+  version: "1.0.0"
+paths:
+  /wijzigingen:
+    get:
+      parameters:
+        - name: van
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: tot
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WijzigingHalCollectie'
+              examples:
+                wijzigingenOp:
+                  $ref: '#/components/examples/WijzigingenOp'
+                wijzigingenVanaf:
+                  $ref: '#/components/examples/WijzigingenVanaf'
+                wijzigingenTot:
+                  $ref: '#/components/examples/WijzigingenTot'
+                wijzigingenInGemeente:
+                  $ref: '#/components/examples/WijzigingenInGemeente'
+components:
+  schemas:
+    WijzigingHalCollectie:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/WijzigingHalCollectie_links'
+        _embedded:
+          $ref: '#/components/schemas/WijzigingHalCollectie_embedded'
+    WijzigingHalCollectie_links:
+      allOf:
+        - $ref: '#/components/schemas/HalCollectionLinks'
+        - properties:
+            kadastraalonroerendezaak:
+              $ref: '#/components/schemas/HalLink'
+            kadasternatuurlijkpersoon:
+              $ref: '#/components/schemas/HalLink'
+    WijzigingHalCollectie_embedded:
+        type: object
+        properties:
+          wijzigingen:
+            $ref: '#/components/schemas/Wijzigingen'
+    Wijzigingen:
+      type: array
+      items:
+        $ref: '#/components/schemas/Wijziging'
+    Wijziging:
+      type: object
+      properties:
+        identificatie:
+          type: string
+        type:
+          type: string
+        wasTijdstip:
+          type: string
+          format: date-time
+        wordtTijdstip:
+          type: string
+          format: date-time
+    Href:
+      type: string
+      format: "uri"
+      example: "datapunt.voorbeeldgemeente.nl/api/{major-versie}/resourcename/{resource-identificatie}"
+    HalLink:
+      description: De Link Object zoals gespecificeerd in https://tools.ietf.org/html/draft-kelly-json-hal-08#section-5
+      type: object
+      required:
+        - href
+      properties:
+        href:
+          $ref: "#/components/schemas/Href"
+        templated:
+          type: boolean
+          default: false
+        title:
+         description: "Voor mens leesbaar label bij de link"
+         type: string
+    HalCollectionLinks:
+      type: object
+      properties:
+        self:
+          $ref: "#/components/schemas/HalLink"
+  examples:
+    WijzigingenOp:
+      summary: |
+        voorbeeld response: wijzigingen op één dag
+      value: {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-01-02&tot-2020-01-03" },
+            "kadastraalonroerendezaak": {
+                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{identificatie}?mutatietijdstip={tijdstip}",
+                 "templated": true
+            },
+            "kadasternatuurlijkpersoon": {
+                "href": "{brk-bevragen-base-url}/kadasternatuurlijkpersonen/{identificatie}?mutatietijdstip={tijdstip}",
+                "templated": true
+            }
+        },
+        "_embedded": {
+            "wijzigingen": [
+                {
+                    "identificatie": "12345678",
+                    "type": "kadastraalonroerendezaak",
+                    "wasTijdstip": "2019-12-30T09:00:00Z",
+                    "wordtTijdstip": "2020-01-02T10:05:00Z"
+                },
+                {
+                    "identificatie": "12345678",
+                    "type": "kadastraalonroerendezaak",
+                    "wasTijdstip": "2020-01-02T10:05:00Z",
+                    "wordtTijdstip": "2020-01-02T13:30:00Z"
+                },
+                {
+                    "identificatie": "45678901",
+                    "type": "kadasternatuurlijkpersoon",
+                    "wordtTijdstip": "2020-01-02T14:00Z"
+                }
+            ]
+        }
+      }
+    WijzigingenVanaf:
+      summary: |
+        voorbeeld response: wijzigingen vanaf een datum
+      value: {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-01-03" },
+            "kadastraalonroerendezaak": {
+                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{identificatie}?mutatietijdstip={tijdstip}",
+                 "templated": true
+            },
+            "zakelijkgerechtigde": {
+                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{identificatie}/zakelijkgerechtigden?mutatietijdstip={tijdstip}",
+                 "templated": true
+            },
+            "kadasternatuurlijkpersoon": {
+                "href": "{brk-bevragen-base-url}/kadasternatuurlijkpersonen/{identificatie}?mutatietijdstip={tijdstip}",
+                "templated": true
+            }
+        },
+        "_embedded": {
+            "wijzigingen": [
+                {
+                    "identificatie": "23456789",
+                    "type": "zakelijkgerechtigde",
+                    "wasTijdstip": "2019-12-30T10:00Z",
+                    "wordtTijdstip": "2020-01-03T12:25Z"
+                },
+                {
+                    "identificatie": "34567890",
+                    "type": "kadastraalonroerendezaak",
+                    "wordtTijdstip": "2020-01-04T10:15Z"
+                },
+                {
+                    "identificatie": "45678901",
+                    "type": "kadasternatuurlijkpersoon",
+                    "watTijdstip": "2020-01-02T14:00Z",
+                    "wordtTijdstip": "2020-01-04T09:00Z"
+                }
+            ]
+        }
+      }
+    WijzigingenTot:
+      summary: |
+        voorbeeld response: wijzigingen tot een datum
+      value: {
+        "_links": {
+            "self": { "href": "/wijzigingen?tot=2020-01-04" },
+            "kadastraalonroerendezaak": {
+                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{identificatie}?mutatietijdstip={tijdstip}",
+                 "templated": true
+            },
+            "kadasternatuurlijkpersoon": {
+                "href": "{brk-bevragen-base-url}/kadasternatuurlijkpersonen/{identificatie}?mutatietijdstip={tijdstip}",
+                "templated": true
+            }
+        },
+        "_embedded": {
+            "wijzigingen": [
+                {
+                    "identificatie": "12345678",
+                    "type": "kadastraalonroerendezaak",
+                    "wasTijdstip": "2019-12-30T09:00:00Z",
+                    "wordtTijdstip": "2020-01-02T10:05:00Z"
+                },
+                {
+                    "identificatie": "12345678",
+                    "type": "kadastraalonroerendezaak",
+                    "wasTijdstip": "2020-01-02T10:05:00Z",
+                    "wordtTijdstip": "2020-01-02T13:30:00Z"
+                },
+                {
+                    "identificatie": "23456789",
+                    "type": "kadastraalonroerendezaak",
+                    "wasTijdstip": "2019-12-30T10:00Z",
+                    "wordtTijdstip": "2020-01-03T12:25Z"
+                },
+                {
+                    "identificatie": "45678901",
+                    "type": "kadasternatuurlijkpersoon",
+                    "wordtTijdstip": "2020-01-02T14:00Z"
+                }
+            ]
+        }
+      }
+    WijzigingenInGemeente:
+      summary: |
+        voorbeeld response: wijzigingen in een gemeente
+      value: {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-01-01gemeentecode=0518" },
+            "kadastraalonroerendezaak": {
+                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{identificatie}?mutatietijdstip={tijdstip}",
+                 "templated": true
+            },
+            "kadasternatuurlijkpersoon": {
+                "href": "{brk-bevragen-base-url}/kadasternatuurlijkpersonen/{identificatie}?mutatietijdstip={tijdstip}",
+                "templated": true
+            }
+        },
+        "_embedded": {
+            "wijzigingen": [
+                {
+                    "identificatie": "34567890",
+                    "type": "kadastraalonroerendezaak",
+                    "wordtTijdstip": "2020-01-04T10:15Z"
+                },
+                {
+                    "identificatie": "45678901",
+                    "type": "kadasternatuurlijkpersoon",
+                    "watTijdstip": "2020-01-02T14:00Z",
+                    "wordtTijdstip": "2020-01-04T09:00Z"
+                }
+            ]
+        }
+      }
