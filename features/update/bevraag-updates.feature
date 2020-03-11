@@ -4,21 +4,12 @@ Functionaliteit: BRK Update API
     Wil ik als afnemer kunnen opvragen welke BRK resources wanneer zijn gewijzigd of nieuw zijn opgevoerd
 
 Achtergrond:
-    Gegeven de base url van de update API is 'https://www.haal-centraal.nl/kadastraal-onroerende-zaak-update/api'
-    En kadastraal onroerende zaak met identificatie 12345678 in gemeente '0344' is gewijzigd op de volgende tijdstippen
-    | tijdstip          |
-    | 2019-12-30T09:00Z |
-    | 2020-01-02T10:05Z |
-    | 2020-01-02T13:30Z |
-    En een zakelijk gerechtigde van kadastraal onroerende zaak met identificatie 23456789 in gemeente '0363' is gewijzigd op de volgende tijdstippen
-    | tijdstip          |
-    | 2019-12-30T10:00Z |
-    | 2020-01-03T12:25Z |
-    En een nieuw kadastraal onroerende zaak met identificatie 34567890 is toegevoegd aan gemeente '0518' op tijdstip '2020-01-04T10:15Z'
-    En een kadaster natuurlijk persoon met identificatie 45678901 in gemeente '0518' is gewijzigd op de volgende tijdstippen
-    | tijdstip          |
-    | 2020-01-02T14:00Z |
-    | 2020-01-04T09:00Z |
+    Gegeven van kadastraal onroerende zaak met identificatie 12345678 in gemeente '0344' is 'toelichtingBewaarder' gewijzigd op '2020-01-02'
+    En is een nieuw zakelijkGerechtigde met identificatie 56789012 toegevoegd aan de kadastraal onroerende zaak met identificatie 12345678 in gemeente '0344' op '2020-01-02'
+    En van kadastraal onroerende zaak met identificatie 23456789 in gemeente '0363' is 'nummeraanduiding' gewijzigd op '2020-01-03'
+    En van zakelijkGerechtigde met identificatie 67890123 van kadastraal onroerende zaak met identificatie 23456789 in gemeente '0363' is 'erfpachtcanon' gewijzigd op '2020-01-04'
+    En een nieuw kadastraal onroerende zaak met identificatie 34567890 is toegevoegd aan gemeente '0518' op '2020-01-04'
+    En een kadastraal onroerende zaak met identificatie 45678901 in gemeente '0518' is vervallen op '2020-01-04'
 
 Scenario: Wijzigingen in een periode opvragen
     Als de consumer de request 'GET /wijzigingen?van=2020-01-02&tot-2020-01-03' stuurt naar de update API
@@ -26,34 +17,25 @@ Scenario: Wijzigingen in een periode opvragen
     """
     {
         "_links": {
-            "self": { "href": "/wijzigingen?van=2020-01-02&tot-2020-01-03" },
-            "kadastraalonroerendezaak": {
-                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{identificatie}?mutatietijdstip={tijdstip}",
-                 "templated": true
-            },
-            "kadasternatuurlijkpersoon": {
-                "href": "{brk-bevragen-base-url}/kadasternatuurlijkpersonen/{identificatie}?mutatietijdstip={tijdstip}",
-                "templated": true
-            }
+            "self": { "href": "/wijzigingen?van=2020-01-02&tot-2020-01-03" }
         },
         "_embedded": {
             "wijzigingen": [
                 {
+                    "_links": {
+                        "self": { "href": "/kadastraalonroerendezaken/12345678?mutatiedatum=2020-01-02&fields=toelichtingBewaarder"}
+                    },
                     "identificatie": "12345678",
                     "type": "kadastraalonroerendezaak",
-                    "wasTijdstip": "2019-12-30T09:00:00Z",
-                    "wordtTijdstip": "2020-01-02T10:05:00Z"
+                    "mutatiedatum": "2020-01-02"
                 },
                 {
-                    "identificatie": "12345678",
-                    "type": "kadastraalonroerendezaak",
-                    "wasTijdstip": "2020-01-02T10:05:00Z",
-                    "wordtTijdstip": "2020-01-02T13:30:00Z"
-                },
-                {
-                    "identificatie": "45678901",
-                    "type": "kadasternatuurlijkpersoon",
-                    "wordtTijdstip": "2020-01-02T14:00Z"
+                    "_links": {
+                        "self": { "href": "/kadastraalonroerendezaken/12345678/zakelijkgerechtigden/56789012?mutatiedatum=2020-01-02"}
+                    },
+                    "identificatie": "56789012",
+                    "type": "zakelijkgerechtigde",
+                    "mutatiedatum": "2020-01-02"
                 }
             ]
         }
@@ -66,38 +48,41 @@ Scenario: Wijzigingen vanaf een datum opvragen
     """
     {
         "_links": {
-            "self": { "href": "/wijzigingen?van=2020-01-03" },
-            "kadastraalonroerendezaak": {
-                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{identificatie}?mutatietijdstip={tijdstip}",
-                 "templated": true
-            },
-            "zakelijkgerechtigde": {
-                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{identificatie}/zakelijkgerechtigden?mutatietijdstip={tijdstip}",
-                 "templated": true
-            },
-            "kadasternatuurlijkpersoon": {
-                "href": "{brk-bevragen-base-url}/kadasternatuurlijkpersonen/{identificatie}?mutatietijdstip={tijdstip}",
-                "templated": true
-            }
+            "self": { "href": "/wijzigingen?van=2020-01-03" }
         },
         "_embedded": {
             "wijzigingen": [
                 {
+                    "_links": {
+                        "self": { "href": "/kadastraalonroerendezaken/23456789?mutatiedatum=2020-01-03&fields=nummeraanduidingidentificatie"}
+                    },
                     "identificatie": "23456789",
-                    "type": "zakelijkgerechtigde",
-                    "wasTijdstip": "2019-12-30T10:00Z",
-                    "wordtTijdstip": "2020-01-03T12:25Z"
+                    "type": "kadastraalonroerendezaak",
+                    "mutatiedatum": "2020-01-03"
                 },
                 {
+                    "_links": {
+                        "self": { "href": "/kadastraalonroerendezaken/23456789/zakelijkgerechtigden/67890123?mutatiedatum=2020-01-04&fields=erfpachtcanon"}
+                    },
+                    "identificatie": "67890123",
+                    "type": "zakelijkgerechtigde",
+                    "mutatiedatum": "2020-01-04"
+                },
+                {
+                    "_links": {
+                        "self": { "href": "/kadastraalonroerendezaken/34567890?mutatiedatum=2020-01-04&expand=zakelijkGerechtigden"}
+                    },
                     "identificatie": "34567890",
                     "type": "kadastraalonroerendezaak",
-                    "wordtTijdstip": "2020-01-04T10:15Z"
+                    "mutatiedatum": "2020-01-04"
                 },
                 {
+                    "_links": {
+                        "self": { "href": "/kadastraalonroerendezaken/34567890?mutatiedatum=2020-01-04&fields=datumEindeGeldigheid"}
+                    },
                     "identificatie": "45678901",
-                    "type": "kadasternatuurlijkpersoon",
-                    "watTijdstip": "2020-01-02T14:00Z",
-                    "wordtTijdstip": "2020-01-04T09:00Z"
+                    "type": "kadastraalonroerendezaak",
+                    "mutatiedatum": "2020-01-04"
                 }
             ]
         }
@@ -110,40 +95,32 @@ Scenario: Wijzigingen tot een datum opvragen
     """
     {
         "_links": {
-            "self": { "href": "/wijzigingen?tot=2020-01-04" },
-            "kadastraalonroerendezaak": {
-                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{identificatie}?mutatietijdstip={tijdstip}",
-                 "templated": true
-            },
-            "kadasternatuurlijkpersoon": {
-                "href": "{brk-bevragen-base-url}/kadasternatuurlijkpersonen/{identificatie}?mutatietijdstip={tijdstip}",
-                "templated": true
-            }
+            "self": { "href": "/wijzigingen?tot=2020-01-04" }
         },
         "_embedded": {
             "wijzigingen": [
-                {
+                    "_links": {
+                        "self": { "href": "/kadastraalonroerendezaken/12345678?mutatiedatum=2020-01-02&fields=toelichtingBewaarder"}
+                    },
                     "identificatie": "12345678",
                     "type": "kadastraalonroerendezaak",
-                    "wasTijdstip": "2019-12-30T09:00:00Z",
-                    "wordtTijdstip": "2020-01-02T10:05:00Z"
+                    "mutatiedatum": "2020-01-02"
                 },
                 {
-                    "identificatie": "12345678",
-                    "type": "kadastraalonroerendezaak",
-                    "wasTijdstip": "2020-01-02T10:05:00Z",
-                    "wordtTijdstip": "2020-01-02T13:30:00Z"
+                    "_links": {
+                        "self": { "href": "/kadastraalonroerendezaken/12345678/zakelijkgerechtigden/56789012?mutatiedatum=2020-01-02"}
+                    },
+                    "identificatie": "56789012",
+                    "type": "zakelijkgerechtigde",
+                    "mutatiedatum": "2020-01-02",
                 },
                 {
+                    "_links": {
+                        "self": { "href": "/kadastraalonroerendezaken/23456789?mutatiedatum=2020-01-03&fields=nummeraanduidingidentificatie"}
+                    },
                     "identificatie": "23456789",
                     "type": "kadastraalonroerendezaak",
-                    "wasTijdstip": "2019-12-30T10:00Z",
-                    "wordtTijdstip": "2020-01-03T12:25Z"
-                },
-                {
-                    "identificatie": "45678901",
-                    "type": "kadasternatuurlijkpersoon",
-                    "wordtTijdstip": "2020-01-02T14:00Z"
+                    "mutatiedatum": "2020-01-03"
                 }
             ]
         }
@@ -156,28 +133,25 @@ Scenario: Wijzigingen voor een gemeente opvragen
     """
     {
         "_links": {
-            "self": { "href": "/wijzigingen?van=2020-01-01gemeentecode=0518" },
-            "kadastraalonroerendezaak": {
-                 "href": "{brk-bevragen-base-url}/kadastraalonroerendezaken/{identificatie}?mutatietijdstip={tijdstip}",
-                 "templated": true
-            },
-            "kadasternatuurlijkpersoon": {
-                "href": "{brk-bevragen-base-url}/kadasternatuurlijkpersonen/{identificatie}?mutatietijdstip={tijdstip}",
-                "templated": true
-            }
+            "self": { "href": "/wijzigingen?van=2020-01-01gemeentecode=0518" }
         },
         "_embedded": {
             "wijzigingen": [
                 {
+                    "_links": {
+                        "self": { "href": "/kadastraalonroerendezaken/34567890?mutatiedatum=2020-01-04&expand=zakelijkGerechtigden"}
+                    },
                     "identificatie": "34567890",
                     "type": "kadastraalonroerendezaak",
-                    "wordtTijdstip": "2020-01-04T10:15Z"
+                    "mutatiedatum": "2020-01-04"
                 },
                 {
+                    "_links": {
+                        "self": { "href": "/kadastraalonroerendezaken/34567890?mutatiedatum=2020-01-04&fields=datumEindeGeldigheid"}
+                    },
                     "identificatie": "45678901",
-                    "type": "kadasternatuurlijkpersoon",
-                    "watTijdstip": "2020-01-02T14:00Z",
-                    "wordtTijdstip": "2020-01-04T09:00Z"
+                    "type": "kadastraalonroerendezaak",
+                    "mutatiedatum": "2020-01-04"
                 }
             ]
         }
