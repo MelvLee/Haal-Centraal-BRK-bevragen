@@ -1,7 +1,7 @@
 #language: nl
-Functionaliteit: BRK Update API
+Functionaliteit: BRK Wijzigingen API
     Om mijn eigen systeem actueel te houden en om historie op te kunnen bouwen
-    Wil ik als afnemer kunnen opvragen welke BRK resources wanneer zijn gewijzigd of nieuw zijn opgevoerd
+    Wil ik als afnemer kunnen opvragen welke BRK resources wanneer zijn gewijzigd, zijn vervallen of nieuw zijn opgevoerd
 
 Achtergrond:
     Gegeven van kadastraal onroerende zaak met identificatie 12345678 in gemeente '0344' is 'toelichtingBewaarder' gewijzigd op '2020-01-02'
@@ -12,7 +12,7 @@ Achtergrond:
     En een kadastraal onroerende zaak met identificatie 45678901 in gemeente '0518' is vervallen op '2020-01-04'
 
 Scenario: Wijzigingen in een periode opvragen
-    Als de consumer de request 'GET /wijzigingen?van=2020-01-02&tot-2020-01-03' stuurt naar de update API
+    Als de consumer de request 'GET /wijzigingen?van=2020-01-02&tot-2020-01-03' stuurt naar de wijzigingen API
     Dan is de response
     """
     {
@@ -43,7 +43,7 @@ Scenario: Wijzigingen in een periode opvragen
     """
 
 Scenario: Wijzigingen vanaf een datum opvragen
-    Als de consumer de request 'GET /wijzigingen?van=2020-01-03' stuurt naar de update API
+    Als de consumer de request 'GET /wijzigingen?van=2020-01-03' stuurt naar de wijzigingen API
     Dan is de response
     """
     {
@@ -90,7 +90,7 @@ Scenario: Wijzigingen vanaf een datum opvragen
     """
 
 Scenario: Wijzigingen tot een datum opvragen
-    Als de consumer de request 'GET /wijzigingen?tot=2020-01-04' stuurt naar de update API
+    Als de consumer de request 'GET /wijzigingen?tot=2020-01-04' stuurt naar de upwijzigingendate API
     Dan is de response
     """
     {
@@ -128,7 +128,7 @@ Scenario: Wijzigingen tot een datum opvragen
     """
 
 Scenario: Wijzigingen voor een gemeente opvragen
-    Als de consumer de request 'GET /wijzigingen?van=2020-01-03&gemeentecode=0518' stuurt naar de update API
+    Als de consumer de request 'GET /wijzigingen?van=2020-01-03&gemeentecode=0518' stuurt naar de wijzigingen API
     Dan is de response
     """
     {
