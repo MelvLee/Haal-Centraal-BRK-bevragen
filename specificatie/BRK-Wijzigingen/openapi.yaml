@@ -13,10 +13,16 @@ paths:
       - wijzigingen
       operationId: getWijzigingen
       parameters:
+        - name: gemeentecode
+          in: query
+          description: gemeenteCode
+          required: true
+          schema:
+            type: string
         - name: van
           in: query
           description: "van"
-          required: false
+          required: true
           schema:
             type: string
             format: date
@@ -27,12 +33,6 @@ paths:
           schema:
             type: string
             format: date
-        - name: gemeentecode
-          in: query
-          description: gemeenteCode
-          required: false
-          schema:
-            type: string
       responses:
         200:
           description: "response"
@@ -61,11 +61,21 @@ paths:
                   $ref: '#/components/examples/BevraagPeriodeLangerDanEenWeek'
                 alleenVan:
                   $ref: '#/components/examples/AlleenVanDatum'
-                alleenTot:
-                  $ref: '#/components/examples/AlleenTotDatum'
-
+        400:
+          $ref: '#/components/responses/400'
 
 components:
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: 'https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-common/master/api-specificatie/common.yaml#/components/schemas/BadRequestFoutbericht'
+          examples:
+            alleenTotDatum:
+              $ref: '#/components/examples/AlleenTotDatum'
+
   schemas:
     WijzigingenHal:
       type: object
@@ -76,16 +86,16 @@ components:
           $ref: '#/components/schemas/Wijzigingen'
     WijzigingenHal_links:
       allOf:
-        - $ref: '#/components/schemas/HalCollectionLinks'
+        - $ref: 'https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-common/master/api-specificatie/common.yaml#/components/schemas/HalCollectionLinks'
         - properties:
             kadastraalonroerendezaak:
-              $ref: '#/components/schemas/HalLink'
+              $ref: 'https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-common/master/api-specificatie/common.yaml#/components/schemas/HalLink'
             zakelijkGerechtigde:          
-              $ref: '#/components/schemas/HalLink'
+              $ref: 'https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-common/master/api-specificatie/common.yaml#/components/schemas/HalLink'
             vervolgbevragingen:
               type: array
               items:
-                $ref: '#/components/schemas/HalLink'
+                $ref: 'https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-common/master/api-specificatie/common.yaml#/components/schemas/HalLink'
     Wijzigingen:
       type: array
       items:
@@ -102,29 +112,6 @@ components:
         mutatiedatum:
           type: string
           format: date
-    Href:
-      type: string
-      format: "uri"
-      example: "datapunt.voorbeeldgemeente.nl/api/{major-versie}/resourcename/{resource-identificatie}"
-    HalLink:
-      description: De Link Object zoals gespecificeerd in https://tools.ietf.org/html/draft-kelly-json-hal-08#section-5
-      type: object
-      required:
-        - href
-      properties:
-        href:
-          $ref: "#/components/schemas/Href"
-        templated:
-          type: boolean
-          default: false
-        title:
-         description: "Voor mens leesbaar label bij de link"
-         type: string
-    HalCollectionLinks:
-      type: object
-      properties:
-        self:
-          $ref: "#/components/schemas/HalLink"
   examples:
     NieuwKadastraalOnroerendeZaak:
       summary: nieuw kadastraal onroerende zaak
@@ -270,10 +257,16 @@ components:
             - href: /wijzigingen?van=2020-02-08&gemeentecode=0344
     AlleenTotDatum:
       summary: alleen tot datum is opgegeven
-      description: de tot datum in de vervolgbevraging is de opgegeven tot datum - 7 dagen
+      description: de van datum is een verplicht veld
       value:
-        _links:
-          self:
-            href: '/wijzigingen?tot=2020-03-01&gemeentecode=0344'
-          vervolgbevragingen:
-            - href: /wijzigingen?tot=2020-02-23&gemeentecode=0344
+        type: https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#/10.4.1 400 Bad Request
+        title: van parameter moet worden opgegeven.
+        status: 400
+        detail: The request could not be understood by the server due to malformed syntax. The client SHOULD NOT repeat the request without modification.
+        instance: /wijzigingen?parameter=van
+        code: paramsRequired
+        invalid-params:
+          - type: https://www.vng.nl/realisatie/api/validaties/integer
+            name: van
+            code: date
+            reason: van datum is verplicht.
