@@ -262,14 +262,8 @@ Scenario: Er is alleen een van datum opgegeven
     }
     """
 
+Rule: gemeente code en van datum zijn verplichte query parameters
+
 Scenario: Er is alleen een tot datum opgegeven
     Als de consumer de request 'GET /wijzigingen?tot=2020-03-01&gemeentecode=0344' stuurt naar de wijzigingen API
-    Dan bevat de response
-    """
-    "_links": {
-        "self": { "href": "/wijzigingen?tot=2020-03-01&gemeentecode=0344" },
-        "vervolgbevragingen": [
-            { "href": "/wijzigingen?tot=2020-02-23&gemeentecode=0344" }
-        ]
-    }
-    """
+    Dan bevat de response de foutmelding dat de van datum verplicht is
