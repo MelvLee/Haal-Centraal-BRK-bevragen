@@ -3,157 +3,279 @@ Functionaliteit: BRK Wijzigingen API
     Om mijn eigen systeem actueel te houden en om historie op te kunnen bouwen
     Wil ik als afnemer kunnen opvragen welke BRK resources wanneer zijn gewijzigd, zijn vervallen of nieuw zijn opgevoerd
 
-Achtergrond:
-    Gegeven van kadastraal onroerende zaak met identificatie 12345678 in gemeente '0344' is 'toelichtingBewaarder' gewijzigd op '2020-01-02'
-    En is een nieuw zakelijkGerechtigde met identificatie 56789012 toegevoegd aan de kadastraal onroerende zaak met identificatie 12345678 in gemeente '0344' op '2020-01-02'
-    En van kadastraal onroerende zaak met identificatie 23456789 in gemeente '0363' is 'nummeraanduiding' gewijzigd op '2020-01-03'
-    En van zakelijkGerechtigde met identificatie 67890123 van kadastraal onroerende zaak met identificatie 23456789 in gemeente '0363' is 'erfpachtcanon' gewijzigd op '2020-01-04'
-    En een nieuw kadastraal onroerende zaak met identificatie 34567890 is toegevoegd aan gemeente '0518' op '2020-01-04'
-    En een kadastraal onroerende zaak met identificatie 45678901 in gemeente '0518' is vervallen op '2020-01-04'
+Scenario: Nieuw kadastraal onroerende zaak
+    Gegeven een nieuw kadastraal onroerende zaak met identificatie 56789012 is toegevoegd aan gemeente '0344' op '2020-02-01'
+    En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-01'
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-01&tot=2020-02-02&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan bevat de response de volgende wijziging gegevensgroep
+    | kadastraalobjectidentificatie | type                     | mutatiedatum |
+    | 56789012                      | kadastraalonroerendezaak | 2020-02-01   |
+    En bevat de response de volgende templated link waarmee data van de kadastraal onroerende zaak op 2020-02-01 kan worden opgehaald
+    | naam                     | href                                                                                   |
+    | kadastraalOnroerendeZaak | /kadastraalonroerendezaken/{kadastraalobjectidentificatie}?mutatiedatum={mutatiedatum} |
+    En is de response
+    """
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-02-01&tot=2020-02-02&gemeentecode=0344" },
+            "kadastraalOnroerendeZaak": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?mutatiedatum={mutatiedatum}", "templated": true }
+        },
+        "wijzigingen": [
+            {
+                "kadastraalobjectidentificatie": "56789012",
+                "type": "kadastraalonroerendezaak",
+                "mutatiedatum": "2020-02-01",
+            }
+        ]
+    }
+    """
 
-Scenario: Wijzigingen in een periode opvragen
-    Als de consumer de request 'GET /wijzigingen?van=2020-01-02&tot-2020-01-03' stuurt naar de wijzigingen API
+Scenario: Gewijzigd kadastraal onroerende zaak
+    Gegeven een kadastraal onroerende zaak met identificatie 56789012 in gemeente '0344' is gewijzigd op '2020-02-03'
+    En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-03'
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-03&tot=2020-02-04&gemeentecode=0344' stuurt naar de wijzigingen API
     Dan is de response
     """
     {
         "_links": {
-            "self": { "href": "/wijzigingen?van=2020-01-02&tot-2020-01-03" }
+            "self": { "href": "/wijzigingen?van=2020-02-03&tot=2020-02-04&gemeentecode=0344" },
+            "kadastraalOnroerendeZaak": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?mutatiedatum={mutatiedatum}", "templated": true }
         },
-        "_embedded": {
-            "wijzigingen": [
-                {
-                    "_links": {
-                        "self": { "href": "/kadastraalonroerendezaken/12345678?mutatiedatum=2020-01-02&fields=toelichtingBewaarder"}
-                    },
-                    "identificatie": "12345678",
-                    "type": "kadastraalonroerendezaak",
-                    "mutatiedatum": "2020-01-02"
-                },
-                {
-                    "_links": {
-                        "self": { "href": "/kadastraalonroerendezaken/12345678/zakelijkgerechtigden/56789012?mutatiedatum=2020-01-02"}
-                    },
-                    "identificatie": "56789012",
-                    "type": "zakelijkgerechtigde",
-                    "mutatiedatum": "2020-01-02"
-                }
-            ]
+        "wijzigingen": [
+            {
+                "kadastraalobjectidentificatie": "56789012",
+                "type": "kadastraalonroerendezaak",
+                "mutatiedatum": "2020-02-03"
+            }
+        ]
+    }
+    """
+
+Scenario: Beëindigd kadastraal onroerende zaak
+    Gegeven een kadastraal onroerende zaak met identificatie 56789012 in gemeente '0344' is beëindigd op '2020-02-05'
+    En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-05'
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-05&tot=2020-02-06&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan is de response
+    """
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-02-05&tot=2020-02-06&gemeentecode=0344" },
+            "kadastraalOnroerendeZaak": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?mutatiedatum={mutatiedatum}", "templated": true }
+        },
+        "wijzigingen": [
+            {
+                "kadastraalobjectidentificatie": "56789012",
+                "type": "kadastraalonroerendezaak",
+                "mutatiedatum": "2020-02-05"
+            }
+        ]
+    }
+    """
+
+Scenario: Samenvoeging tot één kadastraal onroerende zaak
+    Gegeven een kadastraal onroerende zaak met identificatie 56789012 in gemeente '0344'
+    En een kadastraal onroerende zaak met identificatie 67890123 in gemeente '0344'
+    En de kadastraal onroerende zaken is op '2020-02-06' samen gevoegd tot kadastraal onroerende zaak met identificatie 78901234 in gemeente '0344'
+    En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-06'
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-06&tot=2020-02-07&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan is de response
+    """
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-02-06&tot=2020-02-07&gemeentecode=0344" },
+            "kadastraalOnroerendeZaak": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?mutatiedatum={mutatiedatum}", "templated": true }
+        },
+        "wijzigingen": [
+            {
+                "kadastraalobjectidentificatie": "56789012",
+                "type": "kadastraalonroerendezaak",
+                "mutatiedatum": "2020-02-06"
+            },
+            {
+                "kadastraalobjectidentificatie": "67890123",
+                "type": "kadastraalonroerendezaak",
+                "mutatiedatum": "2020-02-06"
+            },
+            {
+                "kadastraalobjectidentificatie": "78901234",
+                "type": "kadastraalonroerendezaak",
+                "mutatiedatum": "2020-02-06"
+            }
+        ]
+    }
+    """
+
+Scenario: Splitsing in meerdere kadastraal onroerende zaken
+    Gegeven een kadastraal onroerende zaak met identificatie 78901234 in gemeente '0344'
+    En de kadastraal onroerende zaak is op '2020-02-07' gesplitst in de volgende kadastraal onroerende zaken
+    | identificatie | gemeente |
+    | 89012345      | 0344     |
+    | 90123456      | 0344     |
+    En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-07'
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-07&tot=2020-02-08&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan is de response
+    """
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-02-07&tot=2020-02-08&gemeentecode=0344" },
+            "kadastraalOnroerendeZaak": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?mutatiedatum={mutatiedatum}", "templated": true }
+        },
+        "wijzigingen": [
+            {
+                "kadastraalobjectidentificatie": "78901234",
+                "type": "kadastraalonroerendezaak",
+                "mutatiedatum": "2020-02-07"
+            },
+            {
+                "kadastraalobjectidentificatie": "89012345",
+                "type": "kadastraalonroerendezaak",
+                "mutatiedatum": "2020-02-07"
+            },
+            {
+                "kadastraalobjectidentificatie": "90123456",
+                "type": "kadastraalonroerendezaak",
+                "mutatiedatum": "2020-02-07"
+            }
+        ]
+    }
+    """
+
+Scenario: Nieuw zakelijk gerechtigde
+    Gegeven een kadastraal onroerende zaak met identificatie 56789012 in gemeente '0344'
+    En een nieuw zakelijk gerechtigde met identificatie 12345678 is toegevoegd aan de kadastraal onroerende zaak op '2020-02-10'
+    En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-10'
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-10&tot=2020-02-11&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan bevat de response de volgende wijziging gegevensgroep
+    | kadastraalobjectidentificatie | zakelijkgerechtigdeidentificatie | type                | mutatiedatum |
+    | 56789012                      | 12345678                         | zakelijkgerechtigde | 2020-02-10   |
+    En bevat de response de volgende templated link waarmee data van de zakelijk gerechtigde op 2020-02-10 kan worden opgehaald
+    | naam                | href                                                                                                        |
+    | zakelijkGerechtigde | /kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden?mutatiedatum={mutatiedatum} |
+    En is de response
+    """
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-02-10&tot=2020-02-11&gemeentecode=0344" },
+            "zakelijkGerechtigde": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden?mutatiedatum={mutatiedatum}", "templated": true }
+        },
+        "wijzigingen": [
+            {
+                "kadastraalobjectidentificatie": "56789012",
+                "zakelijkgerechtigdeidentificatie": "12345678",
+                "type": "zakelijkgerechtigde",
+                "mutatiedatum": "2020-02-10",
+            }
+        ]
+    }
+    """
+
+Scenario: Gewijzigd zakelijk gerechtigde
+    Gegeven een kadastraal onroerende zaak met identificatie 56789012 met zakelijk gerechtigde 12345678 in gemeente '0344'
+    En de zakelijk gerechtigde met identificatie 12345678 is gewijzigd op '2020-02-11'
+    En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-11'
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-11&tot=2020-02-12&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan bevat de response de volgende wijziging gegevensgroep
+    | kadastraalobjectidentificatie | zakelijkgerechtigdeidentificatie | type                | mutatiedatum |
+    | 56789012                      | 12345678                         | zakelijkgerechtigde | 2020-02-10   |
+    En bevat de response de volgende templated link waarmee data van de zakelijk gerechtigde op 2020-02-10 kan worden opgehaald
+    | naam                | href                                                                                                        |
+    | zakelijkGerechtigde | /kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden?mutatiedatum={mutatiedatum} |
+    En is de response
+    """
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-02-11&tot=2020-02-12&gemeentecode=0344" },
+            "zakelijkGerechtigde": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden?mutatiedatum={mutatiedatum}", "templated": true }
+        },
+        "wijzigingen": [
+            {
+                "kadastraalobjectidentificatie": "56789012",
+                "zakelijkgerechtigdeidentificatie": "12345678",
+                "type": "zakelijkgerechtigde",
+                "mutatiedatum": "2020-02-11",
+            }
+        ]
+    }
+    """
+
+Scenario: Beëindigd zakelijk gerechtigde
+    Gegeven een kadastraal onroerende zaak met identificatie 56789012 met zakelijk gerechtigde 12345678 in gemeente '0344'
+    En de zakelijk gerechtigde met identificatie 12345678 is beëindigd op '2020-02-12'
+    En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-12'
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-12&tot=2020-02-13&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan is de response
+    """
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-02-12&tot=2020-02-13&gemeentecode=0344" },
+            "zakelijkGerechtigde": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden?mutatiedatum={mutatiedatum}", "templated": true }
+        },
+        "wijzigingen": [
+            {
+                "kadastraalobjectidentificatie": "56789012",
+                "zakelijkgerechtigdeidentificatie": "12345678",
+                "type": "zakelijkgerechtigde",
+                "mutatiedatum": "2020-02-12",
+            }
+        ]
+    }
+    """
+
+Rule: wijzigingen van vandaag kunnen pas morgen worden opgehaald
+
+Scenario: Er zijn vandaag wijzigingen opgevoerd
+    Gegeven de datum van vandaag is '2020-02-08'
+    En er zijn wijzigingen doorgevoerd in gemeente '0344' op '2020-02-08'
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-08&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan is de response
+    """
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-02-08&gemeentecode=0344" }
         }
     }
     """
 
-Scenario: Wijzigingen vanaf een datum opvragen
-    Als de consumer de request 'GET /wijzigingen?van=2020-01-03' stuurt naar de wijzigingen API
-    Dan is de response
+Rule: de opvraag periode van wijzigingen kan niet langer zijn dan één week
+#Andere opties:
+#-Pagineren. Maakt het volgens mij complexer voor de provider
+#-Afhankelijk maken op aantal wijzigingen per dag. complex: als er op één dag zoveel wijzigingen zijn dat je de vraag van één dag moet splitsen over meerdere vragen, dan zou je paging moeten inbouwen of bevragen met tijdstip
+
+Scenario: De opvraag periode is langer dan één week
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-01&tot=2020-03-01&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan bevat de response
     """
-    {
-        "_links": {
-            "self": { "href": "/wijzigingen?van=2020-01-03" }
-        },
-        "_embedded": {
-            "wijzigingen": [
-                {
-                    "_links": {
-                        "self": { "href": "/kadastraalonroerendezaken/23456789?mutatiedatum=2020-01-03&fields=nummeraanduidingidentificatie"}
-                    },
-                    "identificatie": "23456789",
-                    "type": "kadastraalonroerendezaak",
-                    "mutatiedatum": "2020-01-03"
-                },
-                {
-                    "_links": {
-                        "self": { "href": "/kadastraalonroerendezaken/23456789/zakelijkgerechtigden/67890123?mutatiedatum=2020-01-04&fields=erfpachtcanon"}
-                    },
-                    "identificatie": "67890123",
-                    "type": "zakelijkgerechtigde",
-                    "mutatiedatum": "2020-01-04"
-                },
-                {
-                    "_links": {
-                        "self": { "href": "/kadastraalonroerendezaken/34567890?mutatiedatum=2020-01-04&expand=zakelijkGerechtigden"}
-                    },
-                    "identificatie": "34567890",
-                    "type": "kadastraalonroerendezaak",
-                    "mutatiedatum": "2020-01-04"
-                },
-                {
-                    "_links": {
-                        "self": { "href": "/kadastraalonroerendezaken/34567890?mutatiedatum=2020-01-04&fields=datumEindeGeldigheid"}
-                    },
-                    "identificatie": "45678901",
-                    "type": "kadastraalonroerendezaak",
-                    "mutatiedatum": "2020-01-04"
-                }
-            ]
-        }
+    "_links": {
+        "self": { "href": "/wijzigingen?van=2020-02-01&tot=2020-03-01&gemeentecode=0344" },
+        "vervolgbevragingen": [
+            { "href": "/wijzigingen?van=2020-02-08&tot=2020-02-15&gemeentecode=0344" },
+            { "href": "/wijzigingen?van=2020-02-15&tot=2020-02-22&gemeentecode=0344" },
+            { "href": "/wijzigingen?van=2020-02-22&tot=2020-02-29&gemeentecode=0344" },
+            { "href": "/wijzigingen?van=2020-02-29&tot=2020-03-01&gemeentecode=0344" }
+        ]
     }
     """
 
-Scenario: Wijzigingen tot een datum opvragen
-    Als de consumer de request 'GET /wijzigingen?tot=2020-01-04' stuurt naar de upwijzigingendate API
-    Dan is de response
+Scenario: Er is alleen een van datum opgegeven
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-01&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan bevat de response
     """
-    {
-        "_links": {
-            "self": { "href": "/wijzigingen?tot=2020-01-04" }
-        },
-        "_embedded": {
-            "wijzigingen": [
-                    "_links": {
-                        "self": { "href": "/kadastraalonroerendezaken/12345678?mutatiedatum=2020-01-02&fields=toelichtingBewaarder"}
-                    },
-                    "identificatie": "12345678",
-                    "type": "kadastraalonroerendezaak",
-                    "mutatiedatum": "2020-01-02"
-                },
-                {
-                    "_links": {
-                        "self": { "href": "/kadastraalonroerendezaken/12345678/zakelijkgerechtigden/56789012?mutatiedatum=2020-01-02"}
-                    },
-                    "identificatie": "56789012",
-                    "type": "zakelijkgerechtigde",
-                    "mutatiedatum": "2020-01-02",
-                },
-                {
-                    "_links": {
-                        "self": { "href": "/kadastraalonroerendezaken/23456789?mutatiedatum=2020-01-03&fields=nummeraanduidingidentificatie"}
-                    },
-                    "identificatie": "23456789",
-                    "type": "kadastraalonroerendezaak",
-                    "mutatiedatum": "2020-01-03"
-                }
-            ]
-        }
+    "_links": {
+        "self": { "href": "/wijzigingen?van=2020-02-01&gemeentecode=0344" },
+        "vervolgbevragingen": [
+            { "href": "/wijzigingen?van=2020-02-08&gemeentecode=0344" }
+        ]
     }
     """
 
-Scenario: Wijzigingen voor een gemeente opvragen
-    Als de consumer de request 'GET /wijzigingen?van=2020-01-03&gemeentecode=0518' stuurt naar de wijzigingen API
-    Dan is de response
+Scenario: Er is alleen een tot datum opgegeven
+    Als de consumer de request 'GET /wijzigingen?tot=2020-03-01&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan bevat de response
     """
-    {
-        "_links": {
-            "self": { "href": "/wijzigingen?van=2020-01-01gemeentecode=0518" }
-        },
-        "_embedded": {
-            "wijzigingen": [
-                {
-                    "_links": {
-                        "self": { "href": "/kadastraalonroerendezaken/34567890?mutatiedatum=2020-01-04&expand=zakelijkGerechtigden"}
-                    },
-                    "identificatie": "34567890",
-                    "type": "kadastraalonroerendezaak",
-                    "mutatiedatum": "2020-01-04"
-                },
-                {
-                    "_links": {
-                        "self": { "href": "/kadastraalonroerendezaken/34567890?mutatiedatum=2020-01-04&fields=datumEindeGeldigheid"}
-                    },
-                    "identificatie": "45678901",
-                    "type": "kadastraalonroerendezaak",
-                    "mutatiedatum": "2020-01-04"
-                }
-            ]
-        }
+    "_links": {
+        "self": { "href": "/wijzigingen?tot=2020-03-01&gemeentecode=0344" },
+        "vervolgbevragingen": [
+            { "href": "/wijzigingen?tot=2020-02-23&gemeentecode=0344" }
+        ]
     }
     """
