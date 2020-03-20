@@ -149,14 +149,14 @@ Scenario: Nieuw zakelijk gerechtigde
     | kadastraalobjectidentificatie | zakelijkgerechtigdeidentificatie | type                | mutatiedatum |
     | 56789012                      | 12345678                         | zakelijkgerechtigde | 2020-02-10   |
     En bevat de response de volgende templated link waarmee data van de zakelijk gerechtigde op 2020-02-10 kan worden opgehaald
-    | naam                | href                                                                                                        |
-    | zakelijkGerechtigde | /kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden?mutatiedatum={mutatiedatum} |
+    | naam                | href                                                                                                                                           |
+    | zakelijkGerechtigde | /kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden/{zakelijkgerechtigdeidentificatie}?mutatiedatum={mutatiedatum} |
     En is de response
     """
     {
         "_links": {
             "self": { "href": "/wijzigingen?van=2020-02-10&tot=2020-02-11&gemeentecode=0344" },
-            "zakelijkGerechtigde": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden?mutatiedatum={mutatiedatum}", "templated": true }
+            "zakelijkGerechtigde": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden/{zakelijkgerechtigdeidentificatie}?mutatiedatum={mutatiedatum}", "templated": true }
         },
         "wijzigingen": [
             {
@@ -174,18 +174,12 @@ Scenario: Gewijzigd zakelijk gerechtigde
     En de zakelijk gerechtigde met identificatie 12345678 is gewijzigd op '2020-02-11'
     En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-11'
     Als de consumer de request 'GET /wijzigingen?van=2020-02-11&tot=2020-02-12&gemeentecode=0344' stuurt naar de wijzigingen API
-    Dan bevat de response de volgende wijziging gegevensgroep
-    | kadastraalobjectidentificatie | zakelijkgerechtigdeidentificatie | type                | mutatiedatum |
-    | 56789012                      | 12345678                         | zakelijkgerechtigde | 2020-02-10   |
-    En bevat de response de volgende templated link waarmee data van de zakelijk gerechtigde op 2020-02-10 kan worden opgehaald
-    | naam                | href                                                                                                        |
-    | zakelijkGerechtigde | /kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden?mutatiedatum={mutatiedatum} |
-    En is de response
+    Dan is de response
     """
     {
         "_links": {
             "self": { "href": "/wijzigingen?van=2020-02-11&tot=2020-02-12&gemeentecode=0344" },
-            "zakelijkGerechtigde": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden?mutatiedatum={mutatiedatum}", "templated": true }
+            "zakelijkGerechtigde": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden/{zakelijkgerechtigdeidentificatie}?mutatiedatum={mutatiedatum}", "templated": true }
         },
         "wijzigingen": [
             {
@@ -208,7 +202,7 @@ Scenario: Beëindigd zakelijk gerechtigde
     {
         "_links": {
             "self": { "href": "/wijzigingen?van=2020-02-12&tot=2020-02-13&gemeentecode=0344" },
-            "zakelijkGerechtigde": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden?mutatiedatum={mutatiedatum}", "templated": true }
+            "zakelijkGerechtigde": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden/{zakelijkgerechtigdeidentificatie}?mutatiedatum={mutatiedatum}", "templated": true }
         },
         "wijzigingen": [
             {
@@ -236,12 +230,12 @@ Scenario: Er zijn vandaag wijzigingen opgevoerd
     }
     """
 
-Rule: de opvraag periode van wijzigingen kan niet langer zijn dan één week
+Rule: de bevraag periode van wijzigingen kan niet langer zijn dan één week
 #Andere opties:
 #-Pagineren. Maakt het volgens mij complexer voor de provider
 #-Afhankelijk maken op aantal wijzigingen per dag. complex: als er op één dag zoveel wijzigingen zijn dat je de vraag van één dag moet splitsen over meerdere vragen, dan zou je paging moeten inbouwen of bevragen met tijdstip
 
-Scenario: De opvraag periode is langer dan één week
+Scenario: De bevraag periode is langer dan één week
     Als de consumer de request 'GET /wijzigingen?van=2020-02-01&tot=2020-03-01&gemeentecode=0344' stuurt naar de wijzigingen API
     Dan bevat de response
     """
