@@ -51,6 +51,30 @@ Scenario: Gewijzigd kadastraal onroerende zaak
     }
     """
 
+Scenario: Gewijzigd kadastraal onroerende zaak (fields parameter geeft wijigingen aan)
+    Gegeven van kadastraal onroerende zaak met identificatie 56789012 in gemeente '0344' zijn de volgende kenmerken gewijzigd op '2020-02-03'
+    | gewijzigde kenmerken          |
+    | koopsom, toelichtingbewaarder |
+    En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-03'
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-03&tot=2020-02-04&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan is de response
+    """
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-02-03&tot=2020-02-04&gemeentecode=0344" },
+            "kadastraalOnroerendeZaak": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?mutatiedatum={mutatiedatum}&fields={fields}", "templated": true }
+        },
+        "wijzigingen": [
+            {
+                "kadastraalobjectidentificatie": "56789012",
+                "type": "kadastraalonroerendezaak",
+                "mutatiedatum": "2020-02-03",
+                "fields": "koopsom,toelichtingbewaarder"
+            }
+        ]
+    }
+    """
+
 Scenario: Beëindigd kadastraal onroerende zaak
     Gegeven een kadastraal onroerende zaak met identificatie 56789012 in gemeente '0344' is beëindigd op '2020-02-05'
     En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-05'
@@ -67,6 +91,28 @@ Scenario: Beëindigd kadastraal onroerende zaak
                 "kadastraalobjectidentificatie": "56789012",
                 "type": "kadastraalonroerendezaak",
                 "mutatiedatum": "2020-02-05"
+            }
+        ]
+    }
+    """
+
+Scenario: Beëindigd kadastraal onroerende zaak (fields parameter geeft wijzigingen aan)
+    Gegeven een kadastraal onroerende zaak met identificatie 56789012 in gemeente '0344' is beëindigd op '2020-02-05'
+    En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-05'
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-05&tot=2020-02-06&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan is de response
+    """
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-02-05&tot=2020-02-06&gemeentecode=0344" },
+            "kadastraalOnroerendeZaak": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?mutatiedatum={mutatiedatum}&fields={fields}", "templated": true }
+        },
+        "wijzigingen": [
+            {
+                "kadastraalobjectidentificatie": "56789012",
+                "type": "kadastraalonroerendezaak",
+                "mutatiedatum": "2020-02-05",
+                "fields": "datumeindegeldigheid"
             }
         ]
     }
@@ -192,6 +238,32 @@ Scenario: Gewijzigd zakelijk gerechtigde
     }
     """
 
+Scenario: Gewijzigd zakelijk gerechtigde (fields parameter geeft wijzigingen aan)
+    Gegeven een kadastraal onroerende zaak met identificatie 56789012 met zakelijk gerechtigde 12345678 in gemeente '0344'
+    En van de zakelijk gerechtigde met identificatie 12345678 zijn de volgende kenmerken gewijzigd op '2020-02-11'
+    | gewijzigde kenmerken |
+    | erfpachtcanon        |
+    En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-11'
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-11&tot=2020-02-12&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan is de response
+    """
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-02-11&tot=2020-02-12&gemeentecode=0344" },
+            "zakelijkGerechtigde": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden/{zakelijkgerechtigdeidentificatie}?mutatiedatum={mutatiedatum}&fields={fields}", "templated": true }
+        },
+        "wijzigingen": [
+            {
+                "kadastraalobjectidentificatie": "56789012",
+                "zakelijkgerechtigdeidentificatie": "12345678",
+                "type": "zakelijkgerechtigde",
+                "mutatiedatum": "2020-02-11",
+                "fields": "erfpachtcanon"
+            }
+        ]
+    }
+    """
+
 Scenario: Beëindigd zakelijk gerechtigde
     Gegeven een kadastraal onroerende zaak met identificatie 56789012 met zakelijk gerechtigde 12345678 in gemeente '0344'
     En de zakelijk gerechtigde met identificatie 12345678 is beëindigd op '2020-02-12'
@@ -216,6 +288,30 @@ Scenario: Beëindigd zakelijk gerechtigde
     """
 
 Rule: wijzigingen van vandaag kunnen pas morgen worden opgehaald
+
+Scenario: Beëindigd zakelijk gerechtigde (fields parameter geeft wijzigingen aan)
+    Gegeven een kadastraal onroerende zaak met identificatie 56789012 met zakelijk gerechtigde 12345678 in gemeente '0344'
+    En de zakelijk gerechtigde met identificatie 12345678 is beëindigd op '2020-02-12'
+    En er zijn geen andere wijzigingen in gemeente '0344' op '2020-02-12'
+    Als de consumer de request 'GET /wijzigingen?van=2020-02-12&tot=2020-02-13&gemeentecode=0344' stuurt naar de wijzigingen API
+    Dan is de response
+    """
+    {
+        "_links": {
+            "self": { "href": "/wijzigingen?van=2020-02-12&tot=2020-02-13&gemeentecode=0344" },
+            "zakelijkGerechtigde": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}/zakelijkgerechtigden/{zakelijkgerechtigdeidentificatie}?mutatiedatum={mutatiedatum}&fields={fields}", "templated": true }
+        },
+        "wijzigingen": [
+            {
+                "kadastraalobjectidentificatie": "56789012",
+                "zakelijkgerechtigdeidentificatie": "12345678",
+                "type": "zakelijkgerechtigde",
+                "mutatiedatum": "2020-02-12",
+                "fields": "datumeindegeldigheid"
+            }
+        ]
+    }
+    """
 
 Scenario: Er zijn vandaag wijzigingen opgevoerd
     Gegeven de datum van vandaag is '2020-02-08'
