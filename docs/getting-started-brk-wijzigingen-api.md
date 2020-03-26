@@ -2,6 +2,12 @@
 
 In dit document wordt beschreven hoe je met Prism HTTP Mock Server om de BRK wijzigingen API te mocken.
 
+Meer informatie over de BRK wijzigingen API is te vinden m.b.v. de onderstaande links:
+
+- De technische specificatie in [OpenAPI](https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/feature/wijzigingsnotificatie/specificatie/BRK-Wijzigingen/openapi.yaml)
+- De technische specificatie in [Swagger-formaat](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/feature/wijzigingsnotificatie/specificatie/BRK-Wijzigingen/openapi.yaml)
+- De feature specificatie in [Gherkin](https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/feature/wijzigingsnotificatie/features/update/bevraag-updates.feature) 
+
 ## Prerequisites
 
 Prism kan worden gedraaid middels node.js. Hiervoor moet node.js en npm lokaal worden geïnstalleerd.
