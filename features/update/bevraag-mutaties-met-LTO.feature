@@ -1,14 +1,8 @@
 #language: nl
 Functionaliteit: BRK wijzigingen bevragen met Logisch Tijdstip Ontstaan
     Als kadaster wil ik
-    Dat de klant wijzigingen in de BRK ophaal middels Kadastraal Object identificatie en Logisch Tijdstip Ontstaan of Stuk identificaite en Logisch Tijdstip Ontstaan
+    Dat de klant wijzigingen in de BRK ophaal middels Kadastraal Object identificatie, Stuk identificatie en Logisch Tijdstip Ontstaan
     Zodat de bronsystemen conform BRK Levering kan worden bevraagd
-
-vragen:
-- tijdstip inschrijving = logisch tijdstip ontstaan?
-- is het mogelijk dat alleen een kadastraal object wijzigt, zonder dat er een stuk wordt aangeboden? En omgekeerd?
-- als een zakelijk gerechtigde wijzigt, wordt de wijziging opgehaald via het kadastraal object? Of krijgt je de identificatie van de zakelijk gerechtigde ook via het mutatie bericht
-- wat wordt er bedoeld met een abonnement? In de eerste ontwerp gingen wij uit van gemeente en datum bevragen
 
 Achtergrond:
     Gegeven de volgende mutatie bestanden zijn aangemeld op GDS
@@ -41,8 +35,7 @@ Scenario: Meerdere mutaties op één tijdstip
     {
         "_links": {
             "self": { "href": "/wijzigingen?van=2020-04-15&tot=2020-04-16&kadastralegemeentecode=HTN02" },
-            "kadastraalOnroerendeZaak": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?tijdstipinschrijving={tijdstipinschrijving}", "templated": true },
-            "stuk": { "href": "/stukken/{stukidentificatie}?tijdstipinschrijving={tijdstipinschrijving}"}
+            "kadastraalOnroerendeZaak": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?stukidentificatie={stukidentificatie}&tijdstipinschrijving={tijdstipinschrijving}", "templated": true }
         },
         "wijzigingen": [
             {
@@ -69,8 +62,7 @@ Scenario: Meerdere mutaties op één dag, verschillend tijd
     {
         "_links": {
             "self": { "href": "/wijzigingen?van=2020-04-15&tot=2020-04-16&kadastralegemeentecode=GNG00" },
-            "kadastraalOnroerendeZaak": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?tijdstipinschrijving={tijdstipinschrijving}", "templated": true },
-            "stuk": { "href": "/stukken/{stukidentificatie}?tijdstipinschrijving={tijdstipinschrijving}"}
+            "kadastraalOnroerendeZaak": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?stukidentificatie={stukidentificatie}&tijdstipinschrijving={tijdstipinschrijving}", "templated": true }
         },
         "wijzigingen": [
             {
@@ -88,3 +80,7 @@ Scenario: Meerdere mutaties op één dag, verschillend tijd
         ]
     }
     """
+
+Scenario: Selecteren met contractnummer
+    Als de consumer de request 'GET /wijzigingen?van=2020-04-16&tot=2020-04-17&contractnummer=1234567890' stuurt naar de wijzigingen API
+    Dan worden de mutaties voor contractnummer '1234567890' op volgorde van tijdstip en volgnummer teruggegeven
