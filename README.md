@@ -19,7 +19,7 @@ https://eu-rm.roadmunk.com/publish/29a13c572a0dfc79f1d0386fc572e15383afe11f
 * BRK Waardelijsten: [Technische specificaties](https://github.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/tree/master/specificatie/Waardelijsten) (Open API Specificaties) en ook in [Swagger-formaat](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/VNG-Realisatie/BRK-Bevragingen/master/specificatie/Waardelijsten/openapi.yaml)
 
 * BRK Update: [Technische specificaties](https://github.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/blob/feature/wijzigingsnotificatie/specificatie/BRK-Wijzigingen/openapi-lto.yaml) (Open API Specificaties) en in
-[Swagger-formaat](https://petstore.swagger.io/?url=https://github.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/blob/feature/wijzigingsnotificatie/specificatie/BRK-Wijzigingen/openapi-lto.yaml)
+[Swagger-formaat](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/feature/wijzigingsnotificatie/specificatie/BRK-Wijzigingen/openapi-lto.yaml)
 
 * Ontwerpkeuzes staan in het document [Design decisions](https://github.com/VNG-Realisatie/BRK-bevragingen/blob/master/docs/design_decisions.md)
 
