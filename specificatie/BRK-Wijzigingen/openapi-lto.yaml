@@ -1,0 +1,166 @@
+openapi: 3.0.0
+info:
+  title: "API"
+  version: "1.0.0"
+paths:
+  /wijzigingen:
+    get:
+      tags: 
+      - wijzigingen
+      operationId: getWijzigingen
+      parameters:
+        - name: van
+          in: query
+          description: "van"
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: tot
+          in: query
+          description: "tot"
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: kadastralegemeentecode
+          in: query
+          description: kadastrale gemeente code
+          required: false
+          schema:
+            type: string
+        - name: contractnummer
+          in: query
+          description: contractnummer van de abonnee
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: "response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WijzigingenHal'
+              examples:
+                meerdereMutatiesOpEenTijdstip:
+                  $ref: '#/components/examples/MeerdereMutatiesOpEenTijdstip'
+                meerdereMutatiesOpEenDag:
+                  $ref: '#/components/examples/MeerdereMutatiesOpEenDag'
+        400:
+          $ref: '#/components/responses/400'
+
+components:
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: 'https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-common/master/api-specificatie/common.yaml#/components/schemas/BadRequestFoutbericht'
+          examples:
+            alleenTotDatum:
+              $ref: '#/components/examples/AlleenTotDatum'
+            geenGemeenteCodeEnContractnummer:
+              $ref: '#/components/examples/GeenGemeenteCodeEnContractnummer'
+  schemas:
+    WijzigingenHal:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/WijzigingenHal_links'
+        wijzigingen:
+          $ref: '#/components/schemas/Wijzigingen'
+    WijzigingenHal_links:
+      allOf:
+        - $ref: 'https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-common/master/api-specificatie/common.yaml#/components/schemas/HalCollectionLinks'
+        - properties:
+            kadastraalonroerendezaak:
+              $ref: 'https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-common/master/api-specificatie/common.yaml#/components/schemas/HalLink'
+    Wijzigingen:
+      type: array
+      items:
+        $ref: '#/components/schemas/Wijziging'
+    Wijziging:
+      type: object
+      properties:
+        kadastraalobjectidentificatie:
+          type: string
+        stukidentificatie:
+          type: string
+        tijdstipinschrijving:
+          type: string
+          format: date-time
+        volgnummer:
+          type: integer
+  examples:
+    MeerdereMutatiesOpEenTijdstip:
+      summary: Meerdere mutaties op één tijdstip
+      value:
+        _links:
+          self:
+            href: '/wijzigingen?van=2020-04-15&tot=2020-04-16&kadastralegemeentecode=HTN02'
+          kadastraalOnroerendeZaak:
+            href: '{brkserverurl}/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?stukidentificatie={stukidentificatie}&tijdstipinschrijving={tijdstipinschrijving}'
+            templated: true
+        wijzigingen:
+          - kadastraalobjectidentificatie: 'NL.IMKAD.OnroerendeZaak.32780267210008'
+            stukidentificatie: 'NL.IMKAD.TIAStuk.20200415000001'
+            mutatiedatum: '2020-04-15T09:01:00.000'
+            volgnummer: 1
+          - kadastraalobjectidentificatie: 'NL.IMKAD.OnroerendeZaak.32780267210008'
+            stukidentificatie: 'NL.IMKAD.TIAStuk.20200415000002'
+            mutatiedatum: '2020-04-15T09:01:00.000'
+            volgnummer: 2
+    MeerdereMutatiesOpEenDag:
+      summary: Meerdere mutaties op één dag, verschillend tijdstip
+      value:
+        _links:
+          self:
+            href: '/wijzigingen?van=2020-04-15&tot=2020-04-16&kadastralegemeentecode=GNG00'
+          kadastraalOnroerendeZaak:
+            href: '{brkserverurl}/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?stukidentificatie={stukidentificatie}&tijdstipinschrijving={tijdstipinschrijving}'
+            templated: true
+        wijzigingen:
+          - kadastraalobjectidentificatie: 'NL.IMKAD.OnroerendeZaak.32780267210009'
+            stukidentificatie: 'NL.IMKAD.TIAStuk.20200416000001'
+            mutatiedatum: '2020-04-16T10:01:00.000'
+            volgnummer: 1
+          - kadastraalobjectidentificatie: 'NL.IMKAD.OnroerendeZaak.32780267210009'
+            stukidentificatie: 'NL.IMKAD.TIAStuk.20200416000002'
+            mutatiedatum: '2020-04-16T10:05:00.000'
+            volgnummer: 2
+    AlleenTotDatum:
+      summary: alleen tot datum is opgegeven
+      description: de van datum is een verplicht veld
+      value:
+        type: https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#/10.4.1 400 Bad Request
+        title: van parameter moet worden opgegeven.
+        status: 400
+        detail: The request could not be understood by the server due to malformed syntax. The client SHOULD NOT repeat the request without modification.
+        instance: /wijzigingen?parameter=van
+        code: paramsRequired
+        invalid-params:
+          - type: https://www.vng.nl/realisatie/api/validaties/integer
+            name: van
+            code: date
+            reason: van datum is verplicht.
+    GeenGemeenteCodeEnContractnummer:
+      summary: geen kadastrale gemeente code of contractnummer opgegeven
+      description: Een kadastrale gemeente code of contractnummer is verplicht
+      value:
+        type: https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#/10.4.1 400 Bad Request
+        title: kadastralegemeentecode of contractnummer parameter moet worden opgegeven.
+        status: 400
+        detail: The request could not be understood by the server due to malformed syntax. The client SHOULD NOT repeat the request without modification.
+        instance: /wijzigingen?parameter=van&parameter=tot
+        code: paramsRequired
+        invalid-params:
+          - type: https://www.vng.nl/realisatie/api/validaties/string
+            name: kadastralegemeentecode
+            code: string
+            reason: kadastralegemeentecode is verplicht als er geen contractnummer is opgegeven.
+          - type: https://www.vng.nl/realisatie/api/validaties/integer
+            name: contractnummer
+            code: integer
+            reason: contractnummer is verplicht als er geen kadastralegemeentecode is opgegeven.
