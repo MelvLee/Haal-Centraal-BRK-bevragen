@@ -25,13 +25,13 @@ paths:
             format: date
         - name: kadastralegemeentecode
           in: query
-          description: kadastrale gemeente code
+          description: kadastrale gemeente code. Verplicht als er geen contractnummer is opgegeven.
           required: false
           schema:
             type: string
         - name: contractnummer
           in: query
-          description: contractnummer van de abonnee
+          description: contractnummer van de abonnee. Verplicht als er geen kadastrale gemeente code is opgegeven.
           required: false
           schema:
             type: string
