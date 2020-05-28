@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: "API"
+  title: "BRK Update API"
   version: "1.0.0"
 paths:
   /wijzigingen:
@@ -9,26 +9,20 @@ paths:
       - wijzigingen
       operationId: getWijzigingen
       parameters:
-        - name: van
+        - name: afgiftenummervan
           in: query
-          description: "van"
+          description: "de eerste afgiftenummer van de wijziging die moet worden opgehaald"
           required: true
           schema:
             type: string
             format: date
-        - name: tot
+        - name: afgiftenummertot
           in: query
-          description: "tot"
+          description: "afgiftenummertot"
           required: true
           schema:
             type: string
             format: date
-        - name: kadastralegemeentecode
-          in: query
-          description: kadastrale gemeente code. Verplicht als er geen contractnummer is opgegeven.
-          required: false
-          schema:
-            type: string
         - name: contractnummer
           in: query
           description: contractnummer van de abonnee. Verplicht als er geen kadastrale gemeente code is opgegeven.

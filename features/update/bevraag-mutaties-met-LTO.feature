@@ -28,13 +28,13 @@ Achtergrond:
 Rule: Mutaties moeten op basis van de volgnummer in de bestandsnaam worden verwerkt
 
 Scenario: Meerdere mutaties op één tijdstip
-    Als de consumer de request 'GET /wijzigingen?van=2020-04-15&tot=2020-04-16&kadastralegemeentecode=HTN02' stuurt naar de wijzigingen API
+    Als de consumer de request 'GET /wijzigingen?afgiftenummervan=2020-04-15&afgiftenummertot=2020-04-16&kadastralegemeentecode=HTN02' stuurt naar de wijzigingen API
     Dan worden de mutaties gesorteerd op bestandsnaam teruggegeven
     En is de response
     """
     {
         "_links": {
-            "self": { "href": "/wijzigingen?van=2020-04-15&tot=2020-04-16&kadastralegemeentecode=HTN02" },
+            "self": { "href": "/wijzigingen?afgiftenummervan=2020-04-15&afgiftenummertot=2020-04-16&kadastralegemeentecode=HTN02" },
             "kadastraalOnroerendeZaak": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?stukidentificatie={stukidentificatie}&tijdstipinschrijving={tijdstipinschrijving}", "templated": true }
         },
         "wijzigingen": [
@@ -55,13 +55,13 @@ Scenario: Meerdere mutaties op één tijdstip
     """
 
 Scenario: Meerdere mutaties op één dag, verschillend tijd
-    Als de consumer de request 'GET /wijzigingen?van=2020-04-16&tot=2020-04-17&kadastralegemeentecode=HTN02' stuurt naar de wijzigingen API
+    Als de consumer de request 'GET /wijzigingen?afgiftenummervan=2020-04-16&afgiftenummertot=2020-04-17&kadastralegemeentecode=HTN02' stuurt naar de wijzigingen API
     Dan worden de mutaties gesorteerd op bestandsnaam teruggegeven
     En is de response
     """
     {
         "_links": {
-            "self": { "href": "/wijzigingen?van=2020-04-15&tot=2020-04-16&kadastralegemeentecode=GNG00" },
+            "self": { "href": "/wijzigingen?afgiftenummervan=2020-04-15&afgiftenummertot=2020-04-16&kadastralegemeentecode=GNG00" },
             "kadastraalOnroerendeZaak": { "href": "/kadastraalonroerendezaken/{kadastraalobjectidentificatie}?stukidentificatie={stukidentificatie}&tijdstipinschrijving={tijdstipinschrijving}", "templated": true }
         },
         "wijzigingen": [
@@ -82,10 +82,10 @@ Scenario: Meerdere mutaties op één dag, verschillend tijd
     """
 
 Scenario: Selecteren met contractnummer
-    Als de consumer de request 'GET /wijzigingen?van=2020-04-16&tot=2020-04-17&contractnummer=1234567890' stuurt naar de wijzigingen API
+    Als de consumer de request 'GET /wijzigingen?afgiftenummervan=2020-04-16&afgiftenummertot=2020-04-17&contractnummer=1234567890' stuurt naar de wijzigingen API
     Dan worden de mutaties voor contractnummer '1234567890' op volgorde van tijdstip en volgnummer teruggegeven
 
 Scenario: Selecteren van mutaties van vandaag
     Gegeven vandaag is 2020-04-16
-    Als de consumer de request 'GET /wijzigingen?van=2020-04-16&tot=2020-04-17&contractnummer=1234567890' stuurt naar de wijzigingen API
+    Als de consumer de request 'GET /wijzigingen?afgiftenummervan=2020-04-16&afgiftenummertot=2020-04-17&contractnummer=1234567890' stuurt naar de wijzigingen API
     Dan bevat de response geen mutaties
