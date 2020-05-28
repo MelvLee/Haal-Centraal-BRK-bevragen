@@ -1,0 +1,110 @@
+openapi: 3.0.0
+info:
+  title: "BRK events bevragen API"
+  version: "1.0.0"
+paths:
+  /abonnees/{abonneeidentificatie}/kadastraalonroerendezaakevents:
+    get:
+      parameters:
+        - name: abonneeidentificatie
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: events gevonden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KadastraalOnroerendeZaakEvents"
+  /abonnees/{abonneeidentificatie}/topics/{topic}/kadastraalonroerendezaakevents:
+    get:
+      parameters:
+        - name: abonneeidentificatie
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: topic
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: events gevonden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KadastraalOnroerendeZaakEvents"
+  /kadastraalonroerendezaakevents:
+    get:
+      parameters:
+        - name: kadastraalonroerendezaakidentificatie
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: stukidentificatie
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: zakelijkgerechtigdeidentificatie
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: van
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: tot
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: events gevonden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KadastraalOnroerendeZaakEvents"
+  /kadastraalonroerendezaakevents/{identificatie}:
+    get:
+      parameters:
+        - name: identificatie
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: event gevonden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KadastraalOnroerendeZaakEvent"
+components:
+  schemas:
+    KadastraalOnroerendeZaakEvents:
+      type: array
+      items:
+        $ref: "#/components/schemas/KadastraalOnroerendeZaakEvent"
+    KadastraalOnroerendeZaakEvent:
+      type: object
+      properties:
+        identificatie:
+          description: = topic id + partition id + offset van event
+          type: string
+        tijdstip:
+          description: creatie tijdstip van event
+          type: string
+          format: date-time
+        mutatie:
+          $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/master/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/KadastraalOnroerendeZaak"
