@@ -104,4 +104,12 @@ components:
         vorigEventLink:
           $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-common/master/api-specificatie/common.yaml#/components/schemas/Href"
         nieuweToestandKadastraalOnroerendeZaak:
-          $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/KadastraalOnroerendeZaak"
+          $ref: "#/components/schemas/KadastraalOnroerendeZaakMutatie"
+    KadastraalOnroerendeZaakMutatie:
+      allOf:
+        - $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/KadastraalOnroerendeZaak"
+      properties:
+        zakelijkGerechtigden:
+          type: array
+          items:
+            $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/ZakelijkGerechtigde"
