@@ -109,7 +109,43 @@ components:
       allOf:
         - $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/KadastraalOnroerendeZaak"
       properties:
+        adressen:
+          type: array
+          items: 
+            $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/Adres"
         zakelijkGerechtigden:
           type: array
           items:
-            $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/ZakelijkGerechtigde"
+            $ref: "#/components/schemas/ZakelijkGerechtigdeMutatie"
+        stukken:
+          type: "array"
+          items:
+            $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/AangebodenStuk"
+        onroerendeZaakFiliatie:
+          type: "array"
+          description: "Dit is een link naar filiaties die deze Kadastraal Onroerende Zaak betreffen."
+          items:
+            $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/OnroerendeZaakFiliatie"
+        voorwaartseOnroerendeZaakFiliatie:
+          type: "array"
+          description: "Dit is een link naar filiaties waarbij deze Kadastraal Onroerende Zaak overgegaan in een andere KadastraalOnroerendeZaak."
+          items:
+            $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/VoorwaartseOnroerendeZaakFiliatie"
+        publiekrechtelijkeBeperkingen:
+          type: "array"
+          description: "Dit is een link naar filiaties waarbij deze Kadastraal Onroerende Zaak overgegaan in een andere KadastraalOnroerendeZaak."
+          items:
+            $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/PubliekrechtelijkeBeperking"
+
+    ZakelijkGerechtigdeMutatie:
+      allOf:
+        - $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/ZakelijkGerechtigde"
+      properties:
+        stukken:
+          type: "array"
+          items:
+            $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/AangebodenStuk"
+        stukdelen:
+          type: "array"
+          items:
+            $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/Stukdeel"
