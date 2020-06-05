@@ -104,4 +104,4 @@ components:
         vorigEventLink:
           $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-common/master/api-specificatie/common.yaml#/components/schemas/Href"
         nieuweToestandKadastraalOnroerendeZaak:
-          $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/master/specificatie/BRK-Bevragen/genereervariant/openapi.yaml#/components/schemas/KadastraalOnroerendeZaak"
+          $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRK-bevragen/BRKBevragen1.1/specificatie/BRK-Bevragen/openapi.yaml#/components/schemas/KadastraalOnroerendeZaak"
