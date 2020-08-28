@@ -9,7 +9,7 @@ servers:
 info:
   title: Kadaster - BRK-Bevragen API
   description: "D.m.v. deze toepassing worden meerdere, korte bevragingen op de Basis Registratie Kadaster beschikbaar gesteld. Deze toepassing betreft het verstrekken van Kadastrale Onroerende Zaak informatie."
-  version: "1.1.0"
+  version: "1.1.1"
   contact:
     name: Kadaster Haal Centraal BRK-Bevragen
     url: https://github.com/VNG-Realisatie/Haal-Centraal-BRK-Bevragen
@@ -20,18 +20,25 @@ security:
   - apiKeyAuth: []
 paths:
   /kadastraalonroerendezaken:
-    $ref: "kadastraalonroerendezaken.yaml#/paths/~1kadastraalonroerendezaken"
+    $ref: "kadastraal-onroerende-zaken.yaml#/paths/~1kadastraalonroerendezaken"
   /kadastraalonroerendezaken/{kadastraalonroerendezaakidentificatie}:
-    $ref: "kadastraalonroerendezaken.yaml#/paths/~1kadastraalonroerendezaken~1{kadastraalonroerendezaakidentificatie}"
+    $ref: "kadastraal-onroerende-zaken.yaml#/paths/~1kadastraalonroerendezaken~1{kadastraalonroerendezaakidentificatie}"
   /kadastraalonroerendezaken/{kadastraalonroerendezaakidentificatie}/zakelijkgerechtigden/{zakelijkgerechtigdeidentificatie}:
-    $ref: "zakelijkgerechtigden.yaml#/paths/~1kadastraalonroerendezaken~1{kadastraalonroerendezaakidentificatie}~1zakelijkgerechtigden~1{zakelijkgerechtigdeidentificatie}"
+    $ref: "zakelijk-gerechtigden.yaml#/paths/~1kadastraalonroerendezaken~1{kadastraalonroerendezaakidentificatie}~1zakelijkgerechtigden~1{zakelijkgerechtigdeidentificatie}"
   /kadastraalonroerendezaken/{kadastraalonroerendezaakidentificatie}/zakelijkgerechtigden:
-    $ref: "zakelijkgerechtigden.yaml#/paths/~1kadastraalonroerendezaken~1{kadastraalonroerendezaakidentificatie}~1zakelijkgerechtigden"
+    $ref: "zakelijk-gerechtigden.yaml#/paths/~1kadastraalonroerendezaken~1{kadastraalonroerendezaakidentificatie}~1zakelijkgerechtigden"
   /kadasternatuurlijkpersonen/{kadasternatuurlijkpersoonidentificatie}:
-    $ref: "kadasternatuurlijkpersonen.yaml#/paths/~1kadasternatuurlijkpersonen~1{kadasternatuurlijkpersoonidentificatie}"
+    $ref: "kadaster-natuurlijk-personen.yaml#/paths/~1kadasternatuurlijkpersonen~1{kadasternatuurlijkpersoonidentificatie}"
   /kadasternietnatuurlijkpersonen/{kadasternietnatuurlijkpersoonidentificatie}:
-    $ref: "kadasternietnatuurlijkpersonen.yaml#/paths/~1kadasternietnatuurlijkpersonen~1{kadasternietnatuurlijkpersoonidentificatie}"
+    $ref: "kadaster-niet-natuurlijk-personen.yaml#/paths/~1kadasternietnatuurlijkpersonen~1{kadasternietnatuurlijkpersoonidentificatie}"
   /kadasternatuurlijkpersonen:
-    $ref: "kadasternatuurlijkpersonen.yaml#/paths/~1kadasternatuurlijkpersonen"
+    $ref: "kadaster-natuurlijk-personen.yaml#/paths/~1kadasternatuurlijkpersonen"
   /kadasternietnatuurlijkpersonen:
-    $ref: "kadasternietnatuurlijkpersonen.yaml#/paths/~1kadasternietnatuurlijkpersonen"
+    $ref: "kadaster-niet-natuurlijk-personen.yaml#/paths/~1kadasternietnatuurlijkpersonen"
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+      description: "De API-key dient bij elk request via de `X-Api-Key` request header meegestuurd te worden."
