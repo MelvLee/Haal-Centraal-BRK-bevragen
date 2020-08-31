@@ -9,14 +9,14 @@ paths:
       operationId: GetKadastraalOnroerendeZaken
       externalDocs:
         description: gedetailleerd documentatie
-        url: "https://melvlee.github.io/Haal-Centraal-BRK-bevragen/help/kadastraalonroerendezaken-get.html"
+        url: "https://melvlee.github.io/Haal-Centraal-BRK-bevragen/help/kadastraalonroerendezaken-get"
       description: |
           Het zoeken van kadastraal onroerende zaken door een of meer parameters op te geven uit de categorieën kadastrale aanduiding, ingeschreven persoon, kadasterpersoon of Adres. Het combineren van parameters uit verschillende categorieën is niet toegestaan.
           1. [Kadastrale aanduiding](../help/kadastraalonroerendezaken-get#zoek-met-kadastrale-aanduiding)
-          2.  Ingeschreven persoon als zakelijk gerechtigde
-              -  burgerservicenummer (verplicht)
-              -  typegerechtigde (optioneel)
-          3.  Niet ingeschreven persoon of niet natuurlijk persoon als zakelijk gerechtigde
+          2. [Ingeschreven persoon als zakelijk gerechtigde](../help/kadastraalonroerendezaken-get#zoek-met-burgerservicenummer)
+             - burgerservicenummer (verplicht)
+             - typegerechtigde (optioneel)
+          3. [Niet ingeschreven persoon of niet natuurlijk persoon als zakelijk gerechtigde](../help/kadastraalonroerendezaken-get#zoek-met-kadasterpersoonidentificatie)
               -  kadasterpersoonidentificatie (verplicht)
               -  typegerechtigde (optioneel)
           4.  Adres
