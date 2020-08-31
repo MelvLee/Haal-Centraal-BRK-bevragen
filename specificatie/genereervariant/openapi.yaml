@@ -45,7 +45,7 @@ paths:
         Het maximale aantal zoekresultaten dat geretourneerd wordt is aan de provider om te bepalen. Als het resultaat van de de request dit aantal overtreft worden er geen resultaten geretourneerd en volgt er een foutmelding.
       externalDocs:
         description: gedetailleerd documentatie
-        url: ../help/kadastraalonroerendezaken-get.md
+        url: https://melvlee.github.io/Haal-Centraal-BRK-bevragen/help/kadastraalonroerendezaken-get.html
       operationId: GetKadastraalOnroerendeZaken
       parameters:
       - name: Accept-Crs
