@@ -8,7 +8,7 @@ paths:
       operationId: GetKadastraalOnroerendeZaken
       description: |
           Het zoeken van kadastraal onroerende zaken door een of meer parameters op te geven uit de categorieën kadastrale aanduiding, ingeschreven persoon, kadasterpersoon of Adres. Het combineren van parameters uit verschillende categorieën is niet toegestaan.
-          1.  [Kadastrale aanduiding]("../help/kadastraalonroerendezaken-get#zoek-met-kadastrale-aanduiding")
+          1. [Kadastrale aanduiding]("../help/kadastraalonroerendezaken-get#zoek-met-kadastrale-aanduiding")
           2.  Ingeschreven persoon als zakelijk gerechtigde
               -  burgerservicenummer (verplicht)
               -  typegerechtigde (optioneel)
@@ -24,6 +24,7 @@ paths:
           Met gebruik van de parameter expand kunnen zakelijkgerechtigden direct worden meegeladen.
 
           Het maximale aantal zoekresultaten dat geretourneerd wordt is aan de provider om te bepalen. Als het resultaat van de de request dit aantal overtreft worden er geen resultaten geretourneerd en volgt er een foutmelding.
+          [zoek]("../help/kadastraalonroerendezaken-get#zoek-met-kadastrale-aanduiding")
       parameters:
         - $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-common/v1.0.0/api-specificatie/common.yaml#/components/parameters/acceptCrs"
         - $ref: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-common/v1.0.0/api-specificatie/common.yaml#/components/parameters/expand"
