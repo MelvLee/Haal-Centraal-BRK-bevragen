@@ -7,6 +7,9 @@ paths:
   /kadastraalonroerendezaken:
     get:
       operationId: GetKadastraalOnroerendeZaken
+      externalDocs:
+        description: gedetailleerd documentatie
+        url: "../help/kadastraalonroerendezaken-get.md"
       description: |
           Het zoeken van kadastraal onroerende zaken door een of meer parameters op te geven uit de categorieën kadastrale aanduiding, ingeschreven persoon, kadasterpersoon of Adres. Het combineren van parameters uit verschillende categorieën is niet toegestaan.
           1.  Kadastrale aanduiding
