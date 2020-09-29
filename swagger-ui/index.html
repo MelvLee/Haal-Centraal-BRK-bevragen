@@ -41,8 +41,8 @@
       const ui = SwaggerUIBundle({
         //url: "../specificatie/genereervariant/openapi.yaml",
         urls: [
-          { url: "../specificatie/genereervariant/openapi.yaml", name: "v1.0.0"},
-          { url: "../specificatie/openapi.yaml", name: "vNext"}
+          { url: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRP-bevragen/master/specificatie/genereervariant/openapi.yaml", name: "BRP master"},
+          { url: "https://raw.githubusercontent.com/VNG-Realisatie/Haal-Centraal-BRP-bevragen/develop/specificatie/genereervariant/openapi.yaml", name: "BRP develop"}
         ],
         dom_id: '#swagger-ui',
         deepLinking: true,
